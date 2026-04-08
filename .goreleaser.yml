@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+project_name: gh-action-test
+version: 2
+
+builds:
+  - skip: true
+
+changelog:
+  sort: asc
+  use: git
+  format: "{{.Message}}"
+
+  filters:
+    include:
+      - "^feat:"
+      - "^refactor:"
+      - "^fix:"
+
+  groups:
+    - title: "✨ Features"
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+    - title: "🛠️ Refactor"
+      regexp: '^.*?refactor(\([[:word:]]+\))??!?:.+$'
+    - title: "🐞 Bug Fixes"
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'

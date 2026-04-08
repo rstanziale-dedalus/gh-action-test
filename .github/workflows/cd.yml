@@ -1,0 +1,60 @@
+name: Continuous Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g. v1.2.0)"
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }}
+
+      - name: Validate GoReleaser (dry-run)
+        uses: goreleaser/goreleaser-action@v7
+        with:
+          version: '~> v2'
+          args: release --snapshot --clean
+
+      - name: Generate CHANGELOG.md
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
+        with:
+          version: v2.12.0
+          config: cliff.toml
+          args: --tag ${{ github.event.inputs.version }}
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: Commit CHANGELOG.md
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add CHANGELOG.md
+          git commit -m "chore(release): update changelog for ${{ github.event.inputs.version }}" || echo "No changes to commit"
+          
+      - name: Create tag and push
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          git tag "$VERSION"
+          git push origin main
+          git push origin "$VERSION"
+
+      - name: Publish Release
+        uses: goreleaser/goreleaser-action@v7
+        with:
+          version: '~> v2'
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
