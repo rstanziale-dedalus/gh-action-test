@@ -12,9 +12,9 @@ changelog:
 
   filters:
     include:
-      - "^feat:"
-      - "^refactor:"
-      - "^fix:"
+      - "^feat"
+      - "^refactor"
+      - "^fix"
 
   groups:
     - title: "✨ Features"
