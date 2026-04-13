@@ -5,6 +5,10 @@
 
 * **test:** add missing Test3 entry in file.txt ([98d7741](https://github.com/rstanziale-dedalus/gh-action-test/commit/98d7741b65685b157eb68dfc8161fadda96fba63))
 
+### 🐞 Bug Fixes
+
+* **changelog:** update filters to remove colons from included prefixes ([7ee061e](https://github.com/rstanziale-dedalus/gh-action-test/commit/7ee061e722da459cd960cfa0a188030f58380220))
+
 # 1.0.0 (2026-04-08)
 
 ### ✨ Features
